@@ -1,11 +1,14 @@
-.calendar {
-    width: 90%;
+.rbc-month-row {
+  display: flex;
+  flex-direction: column;
+  flex: 100px; 
+  overflow: hidden;
+  height: 100%;
+  position: relative;
 }
 
-.rbc-month-row {
-    display: flex;
-    flex-direction: column;
-    flex: 100px;
-    overflow: hidden;
-    height: 100%;
+.btn-close {
+  margin-left: 220px;
+  font-size: 1.5em;
+  cursor: pointer;
 }
