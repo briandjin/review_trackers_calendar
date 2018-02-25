@@ -1,0 +1,11 @@
+.calendar {
+    width: 90%;
+}
+
+.rbc-month-row {
+    display: flex;
+    flex-direction: column;
+    flex: 100px;
+    overflow: hidden;
+    height: 100%;
+}

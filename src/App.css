@@ -1,0 +1,14 @@
+.App {
+  text-align: center;
+}
+
+.App-header {
+  height: 150px;
+  padding: 20px;
+}
+
+.calendar-section {
+  display: flex;
+  justify-content: center;
+  padding-bottom: 100px; 
+}
