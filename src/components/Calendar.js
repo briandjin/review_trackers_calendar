@@ -4,7 +4,9 @@ import {
   Drawer, 
   MuiThemeProvider, 
   TextField, 
-  FlatButton, 
+  FlatButton,
+  Divider,
+
 } from 'material-ui';
 import moment from 'moment';
 
@@ -19,9 +21,11 @@ class Calendar extends Component {
     this.state = {
       id: 0,
       drawerOpen: false,
+      editEvent: false,
       title: null,
       events: [],
-      date: null
+      date: null,
+      selectedEventId: null
     }
   }
   
@@ -33,8 +37,9 @@ class Calendar extends Component {
   
   handleTitleInput = (e) => this.setState({ title: e.target.value })
 
-  handleSelectEvent = (event) => {
+  handleSelectEvent = (event, e) => {
     console.log('handleSelectEvent', event)
+    this.setState({drawerOpen: true, editEvent: true, selectedEventId: event.id})
     
   };
 
@@ -70,13 +75,13 @@ class Calendar extends Component {
       id: this.state.id,
       title: this.state.title,
       start: this.state.date,
-      end: this.state.date
+      end: this.state.date,
     };
 
     if (+currDate <= +eventDate) {
       if (this.compareEventDates(+eventDate)) {
 
-        this.setState({ events: [...this.state.events, newEvent], drawerOpen: false, id: this.state.id += 1 });
+        this.setState({ events: [...this.state.events, newEvent], drawerOpen: false, id: ++this.state.id });
 
       } else {
         alert('Sorry you already have a scheduled event')
@@ -87,11 +92,31 @@ class Calendar extends Component {
 
   };
 
+  handleRemoveEvent = () => {
+    this.setState({
+      events: this.state.events.filter((event) => event.id !== this.state.selectedEventId), drawerOpen: false
+    });
+  }
+
+  renderEditEvent = () => {
+    if (this.state.editEvent) {
+      return (
+          <MuiThemeProvider>
+            <div className='edit-section'> 
+              <FlatButton onClick={this.handleRemoveEvent}>Remove Event</FlatButton>
+            </div>
+          </MuiThemeProvider>
+      )
+    }
+    return <noscript />
+  }
+
   render() {
     return (
       <div>
         <MuiThemeProvider>
           <Drawer
+            className='drawer'
             open={this.state.drawerOpen}
           >
             <span 
@@ -108,14 +133,13 @@ class Calendar extends Component {
               label="Create Event"
               onClick={this.createEvent}
             />
+            {this.renderEditEvent()}
           </Drawer>
         </MuiThemeProvider>
 
         <BigCalendar
           className='calendar'
           selectable
-          showMultiDayTimes
-          popup
           defaultView='month'
           events={this.state.events}
           onSelectEvent={this.handleSelectEvent} 
