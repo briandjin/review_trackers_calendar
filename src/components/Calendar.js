@@ -4,10 +4,9 @@ import {
   Drawer, 
   MuiThemeProvider, 
   TextField, 
-  FlatButton 
+  FlatButton, 
 } from 'material-ui';
 import moment from 'moment';
-// import events from '../Events';
 
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import './Calendar.css';
@@ -18,8 +17,9 @@ class Calendar extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      id: 0,
       drawerOpen: false,
-      title: '',
+      title: null,
       events: [],
       date: null
     }
@@ -39,33 +39,53 @@ class Calendar extends Component {
   };
 
   handleSelectSlot = (slotInfo) => {
-    console.log('handleSelectSlot', slotInfo)
     let str = JSON.stringify(slotInfo.start)
 
     var sliced = str.slice(1, str.length - 1)
-    console.log('sliced', sliced)
-    console.log(new Date(sliced))
 
-    this.setState({date: new Date(sliced)})
+    this.setState({ date: new Date(sliced), drawerOpen: true})
     
-    this.handleDrawerToggle()
+  };
+
+  compareEventDates = (newEventDate) => {
+    if (this.state.events.length === 0) {
+      return true;
+    };
+
+    for (let i = 0; i < this.state.events.length; i++) {
+      const currEventDate = new Date(this.state.events[i].start)
+      if (+currEventDate === +newEventDate) {
+        return false;
+      };
+      return true;
+    };
 
   };
 
   createEvent = () => {
+    const currDate = new Date().setHours(0,0,0,0);
+    const eventDate = new Date(this.state.date);
 
-    const event = {
-      id: this.state.events.length,
+    const newEvent = {
+      id: this.state.id,
       title: this.state.title,
       start: this.state.date,
       end: this.state.date
-    }
+    };
 
-    this.setState({ events: [...this.state.events, event] });
-  }
+    if (+currDate <= +eventDate) {
+      if (this.compareEventDates(+eventDate)) {
 
-  
+        this.setState({ events: [...this.state.events, newEvent], drawerOpen: false, id: this.state.id += 1 });
 
+      } else {
+        alert('Sorry you already have a scheduled event')
+      }
+    } else {
+      alert('Sorry you can not create an event in the past')
+    };
+
+  };
 
   render() {
     return (
@@ -74,7 +94,10 @@ class Calendar extends Component {
           <Drawer
             open={this.state.drawerOpen}
           >
-            <span className='btn-close' onClick={this.handleDrawerToggle}>&times;</span>
+            <span 
+              className='btn-close' 
+              onClick={()=> this.setState({ drawerOpen: false })}
+            >&times;</span>
             <h3>Create An Event</h3>
             <TextField
               hintText='Title'
@@ -85,16 +108,16 @@ class Calendar extends Component {
               label="Create Event"
               onClick={this.createEvent}
             />
-
           </Drawer>
         </MuiThemeProvider>
 
         <BigCalendar
+          className='calendar'
           selectable
           showMultiDayTimes
           popup
-          events={this.state.events}
           defaultView='month'
+          events={this.state.events}
           onSelectEvent={this.handleSelectEvent} 
           onSelectSlot={this.handleSelectSlot}
         />
