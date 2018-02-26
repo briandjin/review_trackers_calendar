@@ -32,12 +32,12 @@ class Calendar extends Component {
     console.log("update state", this.state)
   };
 
-  handleSelectEvent = (event, e) => {
+  handleSelectEvent = event => {
     this.setState({drawerOpen: true, editEvent: true, selectedEventId: event.id})
   };
 
   handleSelectSlot = (slotInfo) => {
-    let str = JSON.stringify(slotInfo.start)
+    const str = JSON.stringify(slotInfo.start)
 
     var sliced = str.slice(1, str.length - 1)
 
