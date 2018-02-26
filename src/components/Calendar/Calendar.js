@@ -50,9 +50,9 @@ class Calendar extends Component {
     };
   };
   
-  componentDidUpdate() {
-    console.log("update state", this.state)
-  };
+  // componentDidUpdate() {
+  //   console.log("update state", this.state)
+  // };
 
   handleSelectEvent = event => {
     this.setState({drawerOpen: true, editEvent: true, selectedEventId: event.id})
@@ -156,10 +156,6 @@ class Calendar extends Component {
             className='drawer'
             open={this.state.drawerOpen}
           >
-            {/* <span 
-              className='btn-close' 
-              onClick={()=> this.setState({ drawerOpen: false })}
-            >&times;</span> */}
             <AppBar 
               title = {<span>Create Event</span>}
               iconElementLeft={<IconButton onClick={() => this.setState({ drawerOpen: false })}><NavigationClose /></IconButton>}
