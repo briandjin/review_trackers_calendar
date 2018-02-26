@@ -185,6 +185,7 @@ class Calendar extends Component {
           components={{
             dateCellWrapper: DateCell
           }}
+          defaultDate={new Date()}
         />
 
       </div>
