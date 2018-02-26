@@ -55,11 +55,7 @@ class Calendar extends Component {
       };
       bools.push(true);
     };
-    if (bools.includes(false)) {
-      return false;
-    };
-    return true;
-
+    return bools.includes(false) ? false : true;
   };
 
   createEvent = (newEvent) => {
