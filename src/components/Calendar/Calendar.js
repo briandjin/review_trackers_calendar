@@ -5,7 +5,10 @@ import {
   MuiThemeProvider, 
   TextField, 
   RaisedButton,
+  IconButton,
+  AppBar
 } from 'material-ui';
+import NavigationClose from 'material-ui/svg-icons/navigation/close';
 import moment from 'moment';
 
 import 'react-big-calendar/lib/css/react-big-calendar.css';
@@ -13,6 +16,7 @@ import './Calendar.css';
 
 BigCalendar.setLocalizer(BigCalendar.momentLocalizer(moment));
 
+// Grey out past dates
 const DateCell = ({
   range,
   value,
@@ -152,11 +156,15 @@ class Calendar extends Component {
             className='drawer'
             open={this.state.drawerOpen}
           >
-            <span 
+            {/* <span 
               className='btn-close' 
               onClick={()=> this.setState({ drawerOpen: false })}
-            >&times;</span>
-            <h3>Create An Event</h3>
+            >&times;</span> */}
+            <AppBar 
+              title = {<span>Create Event</span>}
+              iconElementLeft={<IconButton onClick={() => this.setState({ drawerOpen: false })}><NavigationClose /></IconButton>}
+            />
+            
             <TextField
               hintText='Title'
               floatingLabelText='Title'
