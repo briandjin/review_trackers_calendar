@@ -4,9 +4,7 @@ import {
   Drawer, 
   MuiThemeProvider, 
   TextField, 
-  FlatButton,
-  Divider,
-
+  RaisedButton,
 } from 'material-ui';
 import moment from 'moment';
 
@@ -25,22 +23,17 @@ class Calendar extends Component {
       title: null,
       events: [],
       date: null,
-      selectedEventId: null
+      selectedEventId: null,
+      selectedEventTitle: null,
     }
-  }
+  };
   
   componentDidUpdate() {
-    console.log(this.state)
+    console.log("update state", this.state)
   };
 
-  handleDrawerToggle = () => this.setState({ drawerOpen: !this.state.drawerOpen });
-  
-  handleTitleInput = (e) => this.setState({ title: e.target.value })
-
   handleSelectEvent = (event, e) => {
-    console.log('handleSelectEvent', event)
     this.setState({drawerOpen: true, editEvent: true, selectedEventId: event.id})
-    
   };
 
   handleSelectSlot = (slotInfo) => {
@@ -67,16 +60,9 @@ class Calendar extends Component {
 
   };
 
-  createEvent = () => {
+  createEvent = (newEvent) => {
     const currDate = new Date().setHours(0,0,0,0);
     const eventDate = new Date(this.state.date);
-
-    const newEvent = {
-      id: this.state.id,
-      title: this.state.title,
-      start: this.state.date,
-      end: this.state.date,
-    };
 
     if (+currDate <= +eventDate) {
       if (this.compareEventDates(+eventDate)) {
@@ -92,18 +78,62 @@ class Calendar extends Component {
 
   };
 
-  handleRemoveEvent = () => {
+  handleRemoveEvent = (id) => {
     this.setState({
-      events: this.state.events.filter((event) => event.id !== this.state.selectedEventId), drawerOpen: false
+      events: this.state.events.filter(event => event.id !== id), drawerOpen: false, editEvent: false
     });
+  }
+
+  handleEditEvent = () => {
+    // this.handleRemoveEvent(this.state.selectedEventId)
+    // this.createEvent({
+    //   title: this.state.selectedEventTitle,
+    //   id: this.state.selectedEventId,
+    //   start: this.state.date,
+    //   end: this.state.date
+    // })
+
+    const currDate = new Date().setHours(0, 0, 0, 0);
+    const eventDate = new Date(this.state.date);
+
+    if (+currDate <= +eventDate) {
+      if (this.compareEventDates(+eventDate)) {
+        const filteredItem = this.state.events.filter((event, index) => {
+          return event.id === this.state.selectedEventId
+        })
+
+        filteredItem[0].start = this.state.date
+        filteredItem[0].end = this.state.date
+        const filteredArr = this.state.events.filter(event => event.id !== this.state.selectedEventId)
+        
+        filteredArr.push(filteredItem[0])
+
+        this.setState({ events: filteredArr, drawerOpen: false })
+
+
+      } else {
+        alert('Sorry you already have a scheduled event')
+      }
+    } else {
+      alert('Sorry you can not create an event in the past')
+    };
+    
+    
+
   }
 
   renderEditEvent = () => {
     if (this.state.editEvent) {
       return (
           <MuiThemeProvider>
-            <div className='edit-section'> 
-              <FlatButton onClick={this.handleRemoveEvent}>Remove Event</FlatButton>
+            <div>
+              <h3>Edit Event</h3>
+              <p>Select a new day on the Calendar</p>
+              <p>Then click Edit button</p>
+              <RaisedButton onClick={this.handleEditEvent}>Edit</RaisedButton>
+
+              <h3>Remove Event</h3>
+              <RaisedButton onClick={() => this.handleRemoveEvent(this.state.selectedEventId)}>Remove</RaisedButton>
             </div>
           </MuiThemeProvider>
       )
@@ -127,11 +157,16 @@ class Calendar extends Component {
             <TextField
               hintText='Title'
               floatingLabelText='Title'
-              onChange={this.handleTitleInput}
+              onChange={e => this.setState({ title: e.target.value })}
             />
-            <FlatButton 
+            <RaisedButton 
               label="Create Event"
-              onClick={this.createEvent}
+              onClick={() => this.createEvent({
+                id: this.state.id,
+                title: this.state.title,
+                start: this.state.date,
+                end: this.state.date,
+              })}
             />
             {this.renderEditEvent()}
           </Drawer>
