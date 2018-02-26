@@ -11,9 +11,27 @@ import moment from 'moment';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import './Calendar.css';
 
-BigCalendar.setLocalizer(BigCalendar.momentLocalizer(moment))
+BigCalendar.setLocalizer(BigCalendar.momentLocalizer(moment));
+
+const DateCell = ({
+  range,
+  value,
+  children
+}) => {
+
+  const now = new Date();
+  now.setHours(0, 0, 0, 0);
+
+  return (
+    <div className={value < now ? "date-in-past" : ""}>
+      {children}
+    </div>
+  )
+
+}
 
 class Calendar extends Component {
+  
   constructor(props) {
     super(props);
     this.state = {
@@ -25,7 +43,7 @@ class Calendar extends Component {
       date: null,
       selectedEventId: null,
       selectedEventTitle: null,
-    }
+    };
   };
   
   componentDidUpdate() {
@@ -68,10 +86,10 @@ class Calendar extends Component {
         this.setState({ events: [...this.state.events, newEvent], drawerOpen: false, id: ++this.state.id });
 
       } else {
-        alert('Sorry you already have a scheduled event')
-      }
+        alert('Sorry you already have a scheduled event');
+      };
     } else {
-      alert('Sorry you can not create an event in the past')
+      alert('Sorry you can not create an event in the past');
     };
 
   };
@@ -80,16 +98,9 @@ class Calendar extends Component {
     this.setState({
       events: this.state.events.filter(event => event.id !== id), drawerOpen: false, editEvent: false
     });
-  }
+  };
 
   handleEditEvent = () => {
-    // this.handleRemoveEvent(this.state.selectedEventId)
-    // this.createEvent({
-    //   title: this.state.selectedEventTitle,
-    //   id: this.state.selectedEventId,
-    //   start: this.state.date,
-    //   end: this.state.date
-    // })
 
     const currDate = new Date().setHours(0, 0, 0, 0);
     const eventDate = new Date(this.state.date);
@@ -97,25 +108,25 @@ class Calendar extends Component {
     if (+currDate <= +eventDate) {
       if (this.compareEventDates(+eventDate)) {
         const filteredItem = this.state.events.filter((event, index) => {
-          return event.id === this.state.selectedEventId
+          return event.id === this.state.selectedEventId;
         })
 
-        filteredItem[0].start = this.state.date
-        filteredItem[0].end = this.state.date
-        const filteredArr = this.state.events.filter(event => event.id !== this.state.selectedEventId)
+        filteredItem[0].start = this.state.date;
+        filteredItem[0].end = this.state.date;
+        const filteredArr = this.state.events.filter(event => event.id !== this.state.selectedEventId);
         
-        filteredArr.push(filteredItem[0])
+        filteredArr.push(filteredItem[0]);
 
-        this.setState({ events: filteredArr, drawerOpen: false })
+        this.setState({ events: filteredArr, drawerOpen: false });
 
 
       } else {
-        alert('Sorry you already have a scheduled event')
-      }
+        alert('Sorry you already have a scheduled event');
+      };
     } else {
-      alert('Sorry you can not create an event in the past')
+      alert('Sorry you can not create an event in the past');
     };
-  }
+  };
 
   renderEditEvent = () => {
     return this.state.editEvent ? (
@@ -131,7 +142,7 @@ class Calendar extends Component {
             </div>
           </MuiThemeProvider>
       ) : <noscript />
-  }
+  };
 
   render() {
     return (
@@ -171,11 +182,14 @@ class Calendar extends Component {
           events={this.state.events}
           onSelectEvent={this.handleSelectEvent} 
           onSelectSlot={this.handleSelectSlot}
+          components={{
+            dateCellWrapper: DateCell
+          }}
         />
 
       </div>
     );
-  }
+  };
 };
 
 export default Calendar;
