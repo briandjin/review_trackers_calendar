@@ -47,9 +47,6 @@ class Calendar extends Component {
 
   compareEventDates = (newEventDate) => {
     const bools = [];
-    if (this.state.events.length === 0) {
-      return true;
-    };
 
     for (let i = 0; i < this.state.events.length; i++) {
       const currEventDate = new Date(this.state.events[i].start)
