@@ -117,14 +117,10 @@ class Calendar extends Component {
     } else {
       alert('Sorry you can not create an event in the past')
     };
-    
-    
-
   }
 
   renderEditEvent = () => {
-    if (this.state.editEvent) {
-      return (
+    return this.state.editEvent ? (
           <MuiThemeProvider>
             <div>
               <h3>Edit Event</h3>
@@ -136,9 +132,7 @@ class Calendar extends Component {
               <RaisedButton onClick={() => this.handleRemoveEvent(this.state.selectedEventId)}>Remove</RaisedButton>
             </div>
           </MuiThemeProvider>
-      )
-    }
-    return <noscript />
+      ) : <noscript />
   }
 
   render() {
@@ -184,7 +178,6 @@ class Calendar extends Component {
       </div>
     );
   }
-}
+};
 
 export default Calendar;
-
