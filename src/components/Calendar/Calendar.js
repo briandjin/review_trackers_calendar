@@ -30,9 +30,8 @@ const DateCell = ({
     <div className={value < now ? "date-in-past" : ""}>
       {children}
     </div>
-  )
-
-}
+  );
+};
 
 class Calendar extends Component {
   
@@ -113,7 +112,7 @@ class Calendar extends Component {
       if (this.compareEventDates(+eventDate)) {
         const filteredItem = this.state.events.filter((event, index) => {
           return event.id === this.state.selectedEventId;
-        })
+        });
 
         filteredItem[0].start = this.state.date;
         filteredItem[0].end = this.state.date;
@@ -122,7 +121,6 @@ class Calendar extends Component {
         filteredArr.push(filteredItem[0]);
 
         this.setState({ events: filteredArr, drawerOpen: false });
-
 
       } else {
         alert('Sorry you already have a scheduled event');
@@ -134,18 +132,17 @@ class Calendar extends Component {
 
   renderEditEvent = () => {
     return this.state.editEvent ? (
-          <MuiThemeProvider>
-            <div>
-              <h3>Edit Event</h3>
-              <p>Select a new day on the Calendar</p>
-              <p>Then click Edit button</p>
-              <RaisedButton onClick={this.handleEditEvent}>Edit</RaisedButton>
-
-              <h3>Remove Event</h3>
-              <RaisedButton onClick={() => this.handleRemoveEvent(this.state.selectedEventId)}>Remove</RaisedButton>
-            </div>
-          </MuiThemeProvider>
-      ) : <noscript />
+      <MuiThemeProvider>
+        <div>
+          <h3>Edit Event</h3>
+          <p>Select a new day on the Calendar</p>
+          <p>Then click Edit button</p>
+          <RaisedButton onClick={this.handleEditEvent}>Edit</RaisedButton>
+          <h3>Remove Event</h3>
+          <RaisedButton onClick={() => this.handleRemoveEvent(this.state.selectedEventId)}>Remove</RaisedButton>
+        </div>
+      </MuiThemeProvider> 
+    ) : <noscript />
   };
 
   render() {
@@ -186,9 +183,7 @@ class Calendar extends Component {
           events={this.state.events}
           onSelectEvent={this.handleSelectEvent} 
           onSelectSlot={this.handleSelectSlot}
-          components={{
-            dateCellWrapper: DateCell
-          }}
+          components={{ dateCellWrapper: DateCell }}
           defaultDate={new Date()}
         />
 
